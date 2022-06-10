@@ -65,18 +65,18 @@ public class RobotContainer {
     // button to zero the heading
     new JoystickButton(driveJoystick, 2).whenPressed(() -> swerveDrivetrain.zeroHeading());
     // buttons to change the rotation point for evasive maneuvers 
-    new JoystickButton(driveJoystick, 5)
-      .whenPressed(() -> swerveDrivetrain.setRotationPointIdx(1))
-      .whenReleased(() -> swerveDrivetrain.setRotationPointIdx(0));
-    new JoystickButton(driveJoystick, 6)
-      .whenPressed(() -> swerveDrivetrain.setRotationPointIdx(2))
-      .whenReleased(() -> swerveDrivetrain.setRotationPointIdx(0));
-    new JoystickButton(driveJoystick, 7)
-      .whenPressed(() -> swerveDrivetrain.setRotationPointIdx(3))
-      .whenReleased(() -> swerveDrivetrain.setRotationPointIdx(0));
-    new JoystickButton(driveJoystick, 8)
-      .whenPressed(() -> swerveDrivetrain.setRotationPointIdx(4))
-      .whenReleased(() -> swerveDrivetrain.setRotationPointIdx(0));
+    // new JoystickButton(driveJoystick, 5)
+    //   .whenPressed(() -> swerveDrivetrain.setRotationPointIdx(1))
+    //   .whenReleased(() -> swerveDrivetrain.setRotationPointIdx(0));
+    // new JoystickButton(driveJoystick, 6)
+    //   .whenPressed(() -> swerveDrivetrain.setRotationPointIdx(2))
+    //   .whenReleased(() -> swerveDrivetrain.setRotationPointIdx(0));
+    // new JoystickButton(driveJoystick, 7)
+    //   .whenPressed(() -> swerveDrivetrain.setRotationPointIdx(3))
+    //   .whenReleased(() -> swerveDrivetrain.setRotationPointIdx(0));
+    // new JoystickButton(driveJoystick, 8)
+    //   .whenPressed(() -> swerveDrivetrain.setRotationPointIdx(4))
+    //   .whenReleased(() -> swerveDrivetrain.setRotationPointIdx(0));
     
     autonSelector.setDefaultOption("Example", new AutonPathExample(swerveDrivetrain));
     SmartDashboard.putData("Auton Selector", autonSelector);

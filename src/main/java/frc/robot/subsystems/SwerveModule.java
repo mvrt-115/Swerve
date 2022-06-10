@@ -6,11 +6,13 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -25,7 +27,8 @@ public class SwerveModule {
   private final BaseTalon turnMotor;
 
   private final PIDController turnPIDController; 
-  private final AnalogInput absEncoder;
+  // private final AnalogInput absEncoder;
+  private final CANCoder absEncoder;
   private final boolean absEncoderReversed;
   private final double absEncoderOffsetRad;
 
@@ -43,7 +46,7 @@ public class SwerveModule {
 
     absEncoderReversed = encoderReversed;
     absEncoderOffsetRad = encoderOffset;
-    absEncoder = new AnalogInput(encoderID);
+    absEncoder = new CANCoder(encoderID);
 
     turnPIDController = new PIDController(
       Constants.SwerveModule.kPTurn,
@@ -109,10 +112,13 @@ public class SwerveModule {
    * @return the absolute encoder angle in radians
    */
   public double getAbsoluteEncoderRad() {
-    double angle = absEncoder.getVoltage() / RobotController.getVoltage5V();
-    angle *= 2.0 * Math.PI;
+    double angle = absEncoder.getAbsolutePosition();
+    angle = Units.degreesToRadians(angle);
+    // absEncoder.getVoltage() / RobotController.getVoltage5V();
+    // angle *= 2.0 * Math.PI;
     angle -= absEncoderOffsetRad;
     return angle * (absEncoderReversed? -1.0 : 1.0);
+
   }
 
   /**
@@ -187,7 +193,7 @@ public class SwerveModule {
     desiredState = state;
     setVelocity(state.speedMetersPerSecond);
     setAngle(state.angle.getRadians());
-    SmartDashboard.putString("Swerve [" + absEncoder.getChannel() + "] state", state.toString());
+    SmartDashboard.putString("Swerve [" + absEncoder.getDeviceID() + "] state", state.toString());
   }
 
   /**
@@ -204,6 +210,7 @@ public class SwerveModule {
    * @return String name
    */
   public String getName() {
-    return "Swerve " + absEncoder.getChannel();
+    return "Swerve " + absEncoder.getDeviceID();
+    // getChannel()
   }
 }

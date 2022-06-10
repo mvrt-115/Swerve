@@ -62,13 +62,13 @@ public final class Constants {
         public static final double m_backRightEncoderOffset = 0.0;
 
         // Position PID
-        public static final double m_x_control_P = 1;
+        public static final double m_x_control_P = 0.1;
         public static final double m_x_control_I = 0;
         public static final double m_x_control_D = 0;
-        public static final double m_y_control_P = 1;
+        public static final double m_y_control_P = 0.1;
         public static final double m_y_control_I = 0;
         public static final double m_y_control_D = 0;
-        public static final double m_r_control_P = 1;
+        public static final double m_r_control_P = 0.1;
         public static final double m_r_control_I = 0;
         public static final double m_r_control_D = 0;
 
@@ -118,12 +118,12 @@ public final class Constants {
         public static final double kwheelCircumference = 2*Math.PI*radius; // meters
         
         // PID Constants
-        public static final double kP = 1; //3.2364;
+        public static final double kP = 0.1; //3.2364;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kFF = 0;
                                                             
-        public static final double kPTurn = 1;
+        public static final double kPTurn = 0.1;
         public static final double kITurn = 0;
         public static final double kDTurn = 0;
     }

@@ -52,7 +52,7 @@ public class AutonPathExample extends SequentialCommandGroup {
       swerveDrivetrain);
     
     addCommands(
-      new InstantCommand(() -> swerveDrivetrain.resetSimOdometry(trajectory.getInitialPose())),
+      new InstantCommand(() -> swerveDrivetrain.resetOdometry(trajectory.getInitialPose())),
       swerveControllerCommand,
       new InstantCommand(() -> swerveDrivetrain.stopModules()));
   }

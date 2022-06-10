@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -55,7 +56,8 @@ public class SwerveDrivetrain extends SubsystemBase {
   private TrajectoryConfig trajectoryConfig;
 
   // sensors
-  private AHRS gyro;
+  // private AHRS gyro;
+  private PigeonIMU gyro;
   
   // SIM
   private double time = 0;
@@ -63,7 +65,8 @@ public class SwerveDrivetrain extends SubsystemBase {
   
   /** Creates a new SwerveDrive. */
   public SwerveDrivetrain() {
-    gyro = new AHRS(SPI.Port.kMXP);
+    // gyro = new AHRS(SPI.Port.kMXP);
+    gyro = new PigeonIMU(3);
 
     // reset in new thread since gyro needs some time to boot up and we don't 
     // want to interfere with other code
@@ -154,7 +157,9 @@ public class SwerveDrivetrain extends SubsystemBase {
    * Zero the physical gyro
    */
   public void zeroHeading() {
-    gyro.reset();
+    // gyro.reset();
+    gyro.setYaw(0);
+    gyro.setAccumZAngle(0);
   }
 
   /**
@@ -162,7 +167,8 @@ public class SwerveDrivetrain extends SubsystemBase {
    * @return heading angle in degrees
    */
   public double getHeading() {
-    return Math.IEEEremainder(gyro.getAngle(), 360);
+    return Math.IEEEremainder(gyro.getYaw(), 360);
+    //.getAngle()
     /**
      * use IEEEremainder because it uses formula:
      * dividend - (divisor x Math.Round(dividend / divisor))
