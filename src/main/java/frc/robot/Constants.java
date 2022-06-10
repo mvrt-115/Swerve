@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -20,8 +21,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public final class Constants {
     public static class SwerveDrivetrain {
         // Physical Constants
-        public static final double chassisWidth = 0.75;
-        public static final double chassisHeight = 0.75;
+        public static final double chassisWidth = Units.inchesToMeters(26);
+        public static final double chassisHeight = Units.inchesToMeters(28);
 
         // Important locations for swerve
         public static final Translation2d m_standardCenterLocation = new Translation2d(0,0);
