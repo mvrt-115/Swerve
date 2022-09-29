@@ -43,7 +43,7 @@ public class AutonPathExample extends SequentialCommandGroup {
 
     swerveControllerCommand = new SwerveControllerCommand(
       trajectory, 
-      swerveDrivetrain::getSimPose, 
+      swerveDrivetrain::getPose, 
       swerveDrivetrain.getKinematics(), 
       swerveDrivetrain.xController, 
       swerveDrivetrain.yController, 

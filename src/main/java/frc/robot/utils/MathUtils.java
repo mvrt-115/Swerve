@@ -48,7 +48,7 @@ public class MathUtils {
 
     public static int degreesToTicks(double degrees, double encoder_ticks, double gear_ratio)
     {
-        return (int) ((encoder_ticks * gear_ratio) * degrees/360);
+        return (int) ((encoder_ticks / gear_ratio) * degrees/360.0);
     }
 
     public static double ticksToDegrees(double ticks, double encoder_ticks, double gear_ratio)
@@ -68,12 +68,12 @@ public class MathUtils {
 
     public static double mpsToRPM(double v_metersPerSecond, double radius)
     {
-        return 60*v_metersPerSecond/radius;
+        return 60*v_metersPerSecond/(2 * Math.PI * radius);
     }
 
-    public static double rpmToMPS(double v_radPerMinute, double radius)
+    public static double rpmToMPS(double v_RPM, double radius)
     {
-        return v_radPerMinute / 60 * radius;
+        return (v_RPM / 60) * radius * 2 * Math.PI;
     }
 
     public static double ticksToMeter(double ticks, double encoder_ticks, double gear_ratio, double radius)

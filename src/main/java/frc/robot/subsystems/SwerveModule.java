@@ -35,7 +35,6 @@ public class SwerveModule {
   private final double absEncoderOffsetRad;
 
   private SwerveModuleState desiredState;
-  private double posTest = 0;
 
   /** Creates a new SwerveModule. */
   public SwerveModule(int driveID, int turnID, int encoderID, boolean driveReversed, boolean turnReversed, boolean encoderReversed, double encoderOffset) {
@@ -147,10 +146,11 @@ public class SwerveModule {
    */
   public void setAngle(double radians)
   {
+    double setPos = turnPIDController.calculate(getTurnPosition(), radians);
     turnMotor.set(
       ControlMode.Position, 
       MathUtils.radiansToTicks(
-        turnPIDController.calculate(getTurnPosition(), radians),
+        setPos,
         Constants.Talon.talonFXTicks,
         Constants.SwerveModule.gear_ratio_turn));
     
@@ -163,12 +163,9 @@ public class SwerveModule {
     
 
     SmartDashboard.putNumber("Turn Value " + getName(), MathUtils.radiansToTicks(
-      radians,
+      setPos,
       Constants.Talon.talonFXTicks,
       Constants.SwerveModule.gear_ratio_turn));
-    // turnMotor.set(ControlMode.Position, posTest);
-    // posTest += 10;
-    // SmartDashboard.putNumber("Test Pos" + getName(), posTest);
   }
 
   /**
@@ -182,7 +179,6 @@ public class SwerveModule {
         MathUtils.rpmToTicks(
           MathUtils.mpsToRPM(v_mps, Constants.SwerveModule.radius),
           Constants.SwerveModule.gear_ratio_drive));
-      // driveMotor.set(ControlMode.PercentOutput, 0.3);
   }
 
   /**
