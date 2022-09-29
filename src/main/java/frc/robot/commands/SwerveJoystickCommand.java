@@ -47,6 +47,9 @@ public class SwerveJoystickCommand extends CommandBase {
     double vX = xSpeedFunc.get();
     double vY = ySpeedFunc.get();
     double vW = turnSpeedFunc.get();
+    SmartDashboard.putNumber("vX raw", vX);
+    SmartDashboard.putNumber("vY raw", vY);
+    SmartDashboard.putNumber("vW raw", vW);
 
     // apply deadband
     vX = MathUtils.handleDeadband(vX, Constants.SwerveDrivetrain.kThrottleDeadband);
@@ -67,6 +70,11 @@ public class SwerveJoystickCommand extends CommandBase {
     else {
       chassisSpeeds = new ChassisSpeeds(vX, vY, vW);
     }
+    SmartDashboard.putNumber("Chassis Speed", Math.sqrt(
+      Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + 
+      Math.pow(chassisSpeeds.vyMetersPerSecond, 2)
+      )
+    );
     
     // convert to module states and apply to each wheel
     SwerveModuleState[] moduleStates = drivetrain.getKinematics().toSwerveModuleStates(

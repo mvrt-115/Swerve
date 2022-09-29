@@ -5,7 +5,9 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.MathUtil;
@@ -33,6 +35,7 @@ public class SwerveModule {
   private final double absEncoderOffsetRad;
 
   private SwerveModuleState desiredState;
+  private double posTest = 0;
 
   /** Creates a new SwerveModule. */
   public SwerveModule(int driveID, int turnID, int encoderID, boolean driveReversed, boolean turnReversed, boolean encoderReversed, double encoderOffset) {
@@ -43,6 +46,11 @@ public class SwerveModule {
     driveMotor.config_kI(Constants.Talon.kPIDIdx, Constants.SwerveModule.kI);
     driveMotor.config_kD(Constants.Talon.kPIDIdx, Constants.SwerveModule.kD);
     driveMotor.config_kF(Constants.Talon.kPIDIdx, Constants.SwerveModule.kFF);
+
+    turnMotor.config_kP(Constants.Talon.kPIDIdx, 1);
+    turnMotor.config_kI(Constants.Talon.kPIDIdx, 0);
+    turnMotor.config_kD(Constants.Talon.kPIDIdx, 0);
+    turnMotor.config_kF(Constants.Talon.kPIDIdx, 0);
 
     absEncoderReversed = encoderReversed;
     absEncoderOffsetRad = encoderOffset;
@@ -118,7 +126,6 @@ public class SwerveModule {
     // angle *= 2.0 * Math.PI;
     angle -= absEncoderOffsetRad;
     return angle * (absEncoderReversed? -1.0 : 1.0);
-
   }
 
   /**
@@ -126,14 +133,12 @@ public class SwerveModule {
    * calibrate turn motor using abs encoder value
    */
   public void resetEncoders() {
-    driveMotor.setSelectedSensorPosition(0);
-    // if discrete potentiometer:
-    // turnMotor.setSelectedSensorPosition(
-    //   MathUtils.ticksToRadians(getAbsoluteEncoderRad(),
-    //     Constants.Talon.talonFXTicks,
-    //     Constants.SwerveModule.gear_ratio_turn));
-    // else:
-    turnMotor.setSelectedSensorPosition(0);
+    // driveMotor.setSelectedSensorPosition(0);
+    turnMotor.setSelectedSensorPosition(
+      MathUtils.ticksToRadians(getAbsoluteEncoderRad(),
+        Constants.Talon.talonFXTicks,
+        Constants.SwerveModule.gear_ratio_turn));
+    turnMotor.set(ControlMode.Position, 0);
   }
 
   /**
@@ -142,12 +147,28 @@ public class SwerveModule {
    */
   public void setAngle(double radians)
   {
-      turnMotor.set(
-        ControlMode.Position, 
-        MathUtils.radiansToTicks(
-          turnPIDController.calculate(getTurnPosition(), radians),
-          Constants.Talon.talonFXTicks,
-          Constants.SwerveModule.gear_ratio_turn));
+    turnMotor.set(
+      ControlMode.Position, 
+      MathUtils.radiansToTicks(
+        turnPIDController.calculate(getTurnPosition(), radians),
+        Constants.Talon.talonFXTicks,
+        Constants.SwerveModule.gear_ratio_turn));
+    
+    // turnMotor.set(
+    //   ControlMode.Position, 
+    //   MathUtils.radiansToTicks(
+    //     radians,
+    //     Constants.Talon.talonFXTicks,
+    //     Constants.SwerveModule.gear_ratio_turn));
+    
+
+    SmartDashboard.putNumber("Turn Value " + getName(), MathUtils.radiansToTicks(
+      radians,
+      Constants.Talon.talonFXTicks,
+      Constants.SwerveModule.gear_ratio_turn));
+    // turnMotor.set(ControlMode.Position, posTest);
+    // posTest += 10;
+    // SmartDashboard.putNumber("Test Pos" + getName(), posTest);
   }
 
   /**
@@ -161,6 +182,7 @@ public class SwerveModule {
         MathUtils.rpmToTicks(
           MathUtils.mpsToRPM(v_mps, Constants.SwerveModule.radius),
           Constants.SwerveModule.gear_ratio_drive));
+      // driveMotor.set(ControlMode.PercentOutput, 0.3);
   }
 
   /**
@@ -193,7 +215,7 @@ public class SwerveModule {
     desiredState = state;
     setVelocity(state.speedMetersPerSecond);
     setAngle(state.angle.getRadians());
-    SmartDashboard.putString("Swerve [" + absEncoder.getDeviceID() + "] state", state.toString());
+    SmartDashboard.putString("Swerve [" + absEncoder.getDeviceID() + "] desired state", state.toString());
   }
 
   /**
@@ -211,6 +233,17 @@ public class SwerveModule {
    */
   public String getName() {
     return "Swerve " + absEncoder.getDeviceID();
-    // getChannel()
+  }
+
+  /**
+   * get a summary of the modules values
+   * @return
+   */
+  public String getStateSummary() {
+    StringBuilder str = new StringBuilder();
+    str.append("Swerve Module: " + absEncoder.getDeviceID() + "\n");
+    str.append(getState().toString());
+    str.append("Cancoder Position: " + absEncoder.getAbsolutePosition() + "\n");
+    return str.toString();
   }
 }

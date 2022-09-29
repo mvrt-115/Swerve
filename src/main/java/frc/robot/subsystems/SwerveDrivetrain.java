@@ -57,7 +57,7 @@ public class SwerveDrivetrain extends SubsystemBase {
 
   // sensors
   // private AHRS gyro;
-  private PigeonIMU gyro;
+  private AHRS gyro;
   
   // SIM
   private double time = 0;
@@ -65,8 +65,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   
   /** Creates a new SwerveDrive. */
   public SwerveDrivetrain() {
-    // gyro = new AHRS(SPI.Port.kMXP);
-    gyro = new PigeonIMU(3);
+    gyro = new AHRS(SPI.Port.kMXP);
 
     // reset in new thread since gyro needs some time to boot up and we don't 
     // want to interfere with other code
@@ -111,7 +110,7 @@ public class SwerveDrivetrain extends SubsystemBase {
       Constants.SwerveDrivetrain.m_backLeftDriveID,
       Constants.SwerveDrivetrain.m_backLeftTurnID,
       Constants.SwerveDrivetrain.m_backLeftEncoderID,
-      false,
+      true,
       false,
       false,
       Constants.SwerveDrivetrain.m_backLeftEncoderOffset);
@@ -120,7 +119,7 @@ public class SwerveDrivetrain extends SubsystemBase {
       Constants.SwerveDrivetrain.m_backRightDriveID,
       Constants.SwerveDrivetrain.m_backRightTurnID,
       Constants.SwerveDrivetrain.m_backRightEncoderID,
-      false,
+      true,
       false,
       false,
       Constants.SwerveDrivetrain.m_backRightEncoderOffset);
@@ -157,9 +156,7 @@ public class SwerveDrivetrain extends SubsystemBase {
    * Zero the physical gyro
    */
   public void zeroHeading() {
-    // gyro.reset();
-    gyro.setYaw(0);
-    gyro.setAccumZAngle(0);
+    gyro.reset();
   }
 
   /**
@@ -202,7 +199,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     SmartDashboard.putNumber("Robot Heading", getHeading());
     SmartDashboard.putData("Field", field);
     for (SwerveModule m : motors) {
-      SmartDashboard.putString(m.getName(), m.getState().toString());
+      SmartDashboard.putString(m.getName(), m.getStateSummary());
     }
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     SmartDashboard.putString("Robot Sim Location", simOdometry.getPoseMeters().getTranslation().toString());
@@ -221,7 +218,7 @@ public class SwerveDrivetrain extends SubsystemBase {
     // Translation2d vel = getLinearVelocity(); don't use
     // double xPosSim = pose.getX() + vel.getX() * dt; don't use
     // double yPosSim = pose.getY() + vel.getY() * dt; don't use
-    double anglePosSim = simulationData.getHeading() + getDesiredRotationalVelocity() * dt;
+    // double anglePosSim = simulationData.getHeading() + getDesiredRotationalVelocity() * dt;
     // simulationData.update(desiredStates, anglePosSim); // for sim
   }
 

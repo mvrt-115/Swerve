@@ -21,7 +21,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static class SwerveDrivetrain {
         // Physical Constants
-        public static final double chassisWidth = Units.inchesToMeters(26);
+        public static final double chassisWidth = Units.inchesToMeters(28);
         public static final double chassisHeight = Units.inchesToMeters(28);
 
         // Important locations for swerve
@@ -39,21 +39,21 @@ public final class Constants {
         };
 
         // Motor ID
-        public static final int m_frontLeftDriveID = 0;
-        public static final int m_frontRightDriveID = 1;
-        public static final int m_backLeftDriveID = 2;
-        public static final int m_backRightDriveID = 3;
+        public static final int m_frontLeftDriveID = 1;
+        public static final int m_frontRightDriveID = 7;
+        public static final int m_backLeftDriveID = 3;
+        public static final int m_backRightDriveID = 5;
         
-        public static final int m_frontLeftTurnID = 4;
-        public static final int m_frontRightTurnID = 5;
-        public static final int m_backLeftTurnID = 6;
-        public static final int m_backRightTurnID = 7;
+        public static final int m_frontLeftTurnID = 2;
+        public static final int m_frontRightTurnID = 8;
+        public static final int m_backLeftTurnID = 4;
+        public static final int m_backRightTurnID = 6;
 
         // Abs Encoder ID
-        public static final int m_frontLeftEncoderID = 0;
-        public static final int m_frontRightEncoderID = 1;
-        public static final int m_backLeftEncoderID = 2;
-        public static final int m_backRightEncoderID = 3;
+        public static final int m_frontLeftEncoderID = 9;
+        public static final int m_frontRightEncoderID = 12;
+        public static final int m_backLeftEncoderID = 10;
+        public static final int m_backRightEncoderID = 11;
 
         // Abs Encoder Offsets
         public static final double m_frontLeftEncoderOffset = 0.0;
@@ -79,10 +79,10 @@ public final class Constants {
         public static final double kThrottleDeadband = 0.2;
         public static final double kWheelGain = 0.05;
         public static final double kWheelNonlinearity = 0.05;
-        public static final double kMaxSpeedMPS = 5;
+        public static final double kMaxSpeedMPS = 10;
         public static final double kDriveMaxAcceleration = 3;
         public static final double kTurnMaxAcceleration = 2*Math.PI;
-        public static final double kDriveMaxSpeedMPS = 5;
+        public static final double kDriveMaxSpeedMPS = 10;
         public static final double kTurnMaxSpeedRPS = 4*Math.PI;
         public static final int kDriveJoystickPort = 0;
         public static final int kDriveXAxis = 0;
@@ -112,7 +112,7 @@ public final class Constants {
     }
 
     public static class SwerveModule {
-        public static final double gear_ratio_turn = 48.0/1.0;
+        public static final double gear_ratio_turn = 1.0/16.0/1.3;
         public static final double gear_ratio_drive = 6.75/1.0;
         public static final double radius = 0.75; // meters
         public static final double kwheelCircumference = 2*Math.PI*radius; // meters
@@ -123,7 +123,7 @@ public final class Constants {
         public static final double kD = 0;
         public static final double kFF = 0;
                                                             
-        public static final double kPTurn = 0.1;
+        public static final double kPTurn = 0.5;
         public static final double kITurn = 0;
         public static final double kDTurn = 0;
     }
