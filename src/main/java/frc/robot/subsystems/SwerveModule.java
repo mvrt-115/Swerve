@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.sql.Time;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
@@ -46,9 +48,9 @@ public class SwerveModule {
     driveMotor.config_kD(Constants.Talon.kPIDIdx, Constants.SwerveModule.kD);
     driveMotor.config_kF(Constants.Talon.kPIDIdx, Constants.SwerveModule.kFF);
 
-    turnMotor.config_kP(Constants.Talon.kPIDIdx, 1);
-    turnMotor.config_kI(Constants.Talon.kPIDIdx, 0);
-    turnMotor.config_kD(Constants.Talon.kPIDIdx, 0);
+    turnMotor.config_kP(Constants.Talon.kPIDIdx, 0.05);
+    turnMotor.config_kI(Constants.Talon.kPIDIdx, 0.0);
+    turnMotor.config_kD(Constants.Talon.kPIDIdx, 0.0);
     turnMotor.config_kF(Constants.Talon.kPIDIdx, 0);
 
     absEncoderReversed = encoderReversed;
@@ -134,9 +136,14 @@ public class SwerveModule {
   public void resetEncoders() {
     // driveMotor.setSelectedSensorPosition(0);
     turnMotor.setSelectedSensorPosition(
-      MathUtils.ticksToRadians(getAbsoluteEncoderRad(),
+      MathUtils.radiansToTicks(getAbsoluteEncoderRad(),
         Constants.Talon.talonFXTicks,
         Constants.SwerveModule.gear_ratio_turn));
+    SmartDashboard.putBoolean("Pressed", true);
+    try {
+      Thread.sleep(1000);
+    } catch (Exception e) {}
+    SmartDashboard.putBoolean("Pressed", false);
     turnMotor.set(ControlMode.Position, 0);
   }
 
@@ -228,6 +235,7 @@ public class SwerveModule {
    * @return String name
    */
   public String getName() {
+    SmartDashboard.putNumber("Cancoder " + absEncoder.getDeviceID(), absEncoder.getAbsolutePosition());
     return "Swerve " + absEncoder.getDeviceID();
   }
 

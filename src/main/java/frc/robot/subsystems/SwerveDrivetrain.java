@@ -110,7 +110,7 @@ public class SwerveDrivetrain extends SubsystemBase {
       Constants.SwerveDrivetrain.m_backLeftDriveID,
       Constants.SwerveDrivetrain.m_backLeftTurnID,
       Constants.SwerveDrivetrain.m_backLeftEncoderID,
-      true,
+      false,
       false,
       false,
       Constants.SwerveDrivetrain.m_backLeftEncoderOffset);
@@ -119,7 +119,7 @@ public class SwerveDrivetrain extends SubsystemBase {
       Constants.SwerveDrivetrain.m_backRightDriveID,
       Constants.SwerveDrivetrain.m_backRightTurnID,
       Constants.SwerveDrivetrain.m_backRightEncoderID,
-      true,
+      false,
       false,
       false,
       Constants.SwerveDrivetrain.m_backRightEncoderOffset);
@@ -423,5 +423,11 @@ public class SwerveDrivetrain extends SubsystemBase {
    */
   public void setDisabled() {
     state = DrivetrainState.DISABLED;
+  }
+
+  public void resetModules() {
+    for (SwerveModule m:motors) {
+      m.resetEncoders();
+    }
   }
 }

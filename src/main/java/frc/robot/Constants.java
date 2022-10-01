@@ -21,8 +21,8 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
     public static class SwerveDrivetrain {
         // Physical Constants
-        public static final double chassisWidth = Units.inchesToMeters(28);
-        public static final double chassisHeight = Units.inchesToMeters(28);
+        public static final double chassisWidth = Units.inchesToMeters(24);
+        public static final double chassisHeight = Units.inchesToMeters(24);
 
         // Important locations for swerve
         public static final Translation2d m_standardCenterLocation = new Translation2d(0,0);
@@ -56,10 +56,10 @@ public final class Constants {
         public static final int m_backRightEncoderID = 11;
 
         // Abs Encoder Offsets
-        public static final double m_frontLeftEncoderOffset = 0.0;
+        public static final double m_frontLeftEncoderOffset = Units.degreesToRadians(-47);
         public static final double m_frontRightEncoderOffset = 0.0;
         public static final double m_backLeftEncoderOffset = 0.0;
-        public static final double m_backRightEncoderOffset = 0.0;
+        public static final double m_backRightEncoderOffset = Units.degreesToRadians(35);
 
         // Position PID
         public static final double m_x_control_P = 0.1;
@@ -79,11 +79,11 @@ public final class Constants {
         public static final double kThrottleDeadband = 0.2;
         public static final double kWheelGain = 0.05;
         public static final double kWheelNonlinearity = 0.05;
-        public static final double kMaxSpeedMPS = 10;
+        public static final double kMaxSpeedMPS = 15;
         public static final double kDriveMaxAcceleration = 3;
         public static final double kTurnMaxAcceleration = 2*Math.PI;
-        public static final double kDriveMaxSpeedMPS = 10;
-        public static final double kTurnMaxSpeedRPS = 4*Math.PI;
+        public static final double kDriveMaxSpeedMPS = 15;
+        public static final double kTurnMaxSpeedRPS = 8*Math.PI;
         public static final int kDriveJoystickPort = 0;
         public static final int kDriveXAxis = 0;
         public static final int kDriveYAxis = 1;
