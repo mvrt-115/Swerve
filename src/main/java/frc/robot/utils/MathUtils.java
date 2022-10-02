@@ -80,4 +80,15 @@ public class MathUtils {
     {
         return (ticks/encoder_ticks) * gear_ratio * 2 * Math.PI * radius;
     }
+
+    /**
+     * Check if a value is within a certain range of another
+     * @param val
+     * @param compare_val
+     * @param epsilon
+     * @return
+     */
+    public static boolean withinEpsilon(double val, double compare_val, double epsilon) {
+        return (compare_val - epsilon) <= val && val <= (compare_val + epsilon); 
+    }
 }

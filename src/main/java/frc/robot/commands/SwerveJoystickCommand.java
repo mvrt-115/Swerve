@@ -9,6 +9,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -20,9 +21,10 @@ public class SwerveJoystickCommand extends CommandBase {
   private final Supplier<Double> xSpeedFunc, ySpeedFunc, turnSpeedFunc;
   private final Supplier<Boolean> fieldOrientedFunc;
   private final SlewRateLimiter xLimiter, yLimiter, wLimiter;
+  private final Joystick joystick;
 
   /** Creates a new SwerveJoystickCommand. */
-  public SwerveJoystickCommand(SwerveDrivetrain drivetrain, Supplier<Double> xSpeedFunc, Supplier<Double> ySpeedFunc, Supplier<Double> angularSpeedFunc, Supplier<Boolean> fieldOrientedFunc) {
+  public SwerveJoystickCommand(SwerveDrivetrain drivetrain, Supplier<Double> xSpeedFunc, Supplier<Double> ySpeedFunc, Supplier<Double> angularSpeedFunc, Supplier<Boolean> fieldOrientedFunc, Joystick joystick) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.drivetrain = drivetrain;
     this.xSpeedFunc = xSpeedFunc;
@@ -32,6 +34,7 @@ public class SwerveJoystickCommand extends CommandBase {
     this.xLimiter = new SlewRateLimiter(Constants.SwerveDrivetrain.kDriveMaxAcceleration);
     this.yLimiter = new SlewRateLimiter(Constants.SwerveDrivetrain.kDriveMaxAcceleration);
     this.wLimiter = new SlewRateLimiter(Constants.SwerveDrivetrain.kTurnMaxAcceleration);
+    this.joystick = joystick;
     addRequirements(drivetrain);
   }
 
@@ -61,16 +64,26 @@ public class SwerveJoystickCommand extends CommandBase {
     vY = yLimiter.calculate(vY) * Constants.SwerveDrivetrain.kDriveMaxSpeedMPS;
     vW = wLimiter.calculate(vW) * Constants.SwerveDrivetrain.kTurnMaxSpeedRPS;
 
+    // configure rotate point
+    int POV = joystick.getPOV();
+    switch(POV) {
+      case 0: drivetrain.setRotationPointIdx(1);
+      case 90: drivetrain.setRotationPointIdx(2);
+      case 180: drivetrain.setRotationPointIdx(3);
+      case 270: drivetrain.setRotationPointIdx(4);
+      default: drivetrain.setRotationPointIdx(0);
+    }
+
     // get chassis speed
     ChassisSpeeds chassisSpeeds;
-    chassisSpeeds = new ChassisSpeeds(-vX, vY, vW);
-    // if (fieldOrientedFunc.get()) {
-    //   chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-    //     -vY, vX, vW, drivetrain.getRotation2d());
-    // }
-    // else {
-    //   chassisSpeeds = new ChassisSpeeds(vX, vY, vW);
-    // }
+    // chassisSpeeds = new ChassisSpeeds(-vX, vY, vW);
+    if (fieldOrientedFunc.get()) {
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+        -vY, vX, vW, drivetrain.getRotation2d());
+    }
+    else {
+      chassisSpeeds = new ChassisSpeeds(vX, vY, vW);
+    }
     SmartDashboard.putNumber("Chassis Speed", Math.sqrt(
       Math.pow(chassisSpeeds.vxMetersPerSecond, 2) + 
       Math.pow(chassisSpeeds.vyMetersPerSecond, 2)
@@ -85,6 +98,11 @@ public class SwerveJoystickCommand extends CommandBase {
     SmartDashboard.putNumber("vX", vX);
     SmartDashboard.putNumber("vY", vY);
     SmartDashboard.putNumber("vW", vW);
+
+    if (MathUtils.withinEpsilon(vX, 0, 0.01) && MathUtils.withinEpsilon(vY, 0, 0.01) && MathUtils.withinEpsilon(vW, 0, 0.01)) {
+      drivetrain.stopModules();
+      drivetrain.setRotationPointIdx(0);
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -68,7 +68,7 @@ public final class Constants {
         public static final double m_y_control_P = 0.1;
         public static final double m_y_control_I = 0;
         public static final double m_y_control_D = 0;
-        public static final double m_r_control_P = 0.1;
+        public static final double m_r_control_P = 1;
         public static final double m_r_control_I = 0;
         public static final double m_r_control_D = 0;
 
@@ -82,8 +82,8 @@ public final class Constants {
         public static final double kMaxSpeedMPS = 15;
         public static final double kDriveMaxAcceleration = 3;
         public static final double kTurnMaxAcceleration = 2*Math.PI;
-        public static final double kDriveMaxSpeedMPS = 15;
-        public static final double kTurnMaxSpeedRPS = 8*Math.PI;
+        public static final double kDriveMaxSpeedMPS = 5;
+        public static final double kTurnMaxSpeedRPS = 4*Math.PI;
         public static final int kDriveJoystickPort = 0;
         public static final int kDriveXAxis = 0;
         public static final int kDriveYAxis = 1;
@@ -123,8 +123,9 @@ public final class Constants {
         public static final double kD = 0;
         public static final double kFF = 0;
                                                             
-        public static final double kPTurn = 0.5;
+        public static final double kPTurn = 0.05;
         public static final double kITurn = 0;
         public static final double kDTurn = 0;
+        public static final double kFTurn = 0;
     }
 }

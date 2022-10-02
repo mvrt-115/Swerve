@@ -30,7 +30,6 @@ public class SwerveModule {
   private final BaseTalon driveMotor;
   private final BaseTalon turnMotor;
 
-  private final PIDController turnPIDController; 
   // private final AnalogInput absEncoder;
   private final CANCoder absEncoder;
   private final boolean absEncoderReversed;
@@ -48,21 +47,14 @@ public class SwerveModule {
     driveMotor.config_kD(Constants.Talon.kPIDIdx, Constants.SwerveModule.kD);
     driveMotor.config_kF(Constants.Talon.kPIDIdx, Constants.SwerveModule.kFF);
 
-    turnMotor.config_kP(Constants.Talon.kPIDIdx, 0.05);
-    turnMotor.config_kI(Constants.Talon.kPIDIdx, 0.0);
-    turnMotor.config_kD(Constants.Talon.kPIDIdx, 0.0);
-    turnMotor.config_kF(Constants.Talon.kPIDIdx, 0);
+    turnMotor.config_kP(Constants.Talon.kPIDIdx, Constants.SwerveModule.kPTurn);
+    turnMotor.config_kI(Constants.Talon.kPIDIdx, Constants.SwerveModule.kITurn);
+    turnMotor.config_kD(Constants.Talon.kPIDIdx, Constants.SwerveModule.kDTurn);
+    turnMotor.config_kF(Constants.Talon.kPIDIdx, Constants.SwerveModule.kFTurn);
 
     absEncoderReversed = encoderReversed;
     absEncoderOffsetRad = encoderOffset;
     absEncoder = new CANCoder(encoderID);
-
-    turnPIDController = new PIDController(
-      Constants.SwerveModule.kPTurn,
-      Constants.SwerveModule.kITurn,
-      Constants.SwerveModule.kDTurn);
-    
-    turnPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
     desiredState = new SwerveModuleState();
 
@@ -141,7 +133,7 @@ public class SwerveModule {
         Constants.SwerveModule.gear_ratio_turn));
     SmartDashboard.putBoolean("Pressed", true);
     try {
-      Thread.sleep(1000);
+      Thread.sleep(500);
     } catch (Exception e) {}
     SmartDashboard.putBoolean("Pressed", false);
     turnMotor.set(ControlMode.Position, 0);
@@ -153,24 +145,15 @@ public class SwerveModule {
    */
   public void setAngle(double radians)
   {
-    double setPos = turnPIDController.calculate(getTurnPosition(), radians);
     turnMotor.set(
       ControlMode.Position, 
       MathUtils.radiansToTicks(
-        setPos,
+        radians,
         Constants.Talon.talonFXTicks,
         Constants.SwerveModule.gear_ratio_turn));
-    
-    // turnMotor.set(
-    //   ControlMode.Position, 
-    //   MathUtils.radiansToTicks(
-    //     radians,
-    //     Constants.Talon.talonFXTicks,
-    //     Constants.SwerveModule.gear_ratio_turn));
-    
 
     SmartDashboard.putNumber("Turn Value " + getName(), MathUtils.radiansToTicks(
-      setPos,
+      radians,
       Constants.Talon.talonFXTicks,
       Constants.SwerveModule.gear_ratio_turn));
   }
@@ -226,8 +209,9 @@ public class SwerveModule {
    */
   public void stop() {
     driveMotor.set(ControlMode.PercentOutput, 0);
+    turnMotor.set(ControlMode.Position, 0);
     turnMotor.set(ControlMode.PercentOutput, 0);
-    desiredState = new SwerveModuleState(0, desiredState.angle);
+    desiredState = new SwerveModuleState(0, new Rotation2d(0.0));
   }
 
   /**
@@ -245,9 +229,9 @@ public class SwerveModule {
    */
   public String getStateSummary() {
     StringBuilder str = new StringBuilder();
-    str.append("Swerve Module: " + absEncoder.getDeviceID() + "\n");
+    str.append("Swerve Module: [" + absEncoder.getDeviceID() + "]: ");
     str.append(getState().toString());
-    str.append("Cancoder Position: " + absEncoder.getAbsolutePosition() + "\n");
+    str.append("; Cancoder Position: " + absEncoder.getAbsolutePosition() + "");
     return str.toString();
   }
 }

@@ -40,6 +40,8 @@ public class RobotContainer {
   private final SwerveDrivetrain swerveDrivetrain = new SwerveDrivetrain();
 
   private final Joystick driveJoystick = new Joystick(Constants.SwerveDrivetrain.kDriveJoystickPort);
+  private JoystickButton resetHeadingButton;
+  private JoystickButton resetSwerveModulesButton;
 
   private final SendableChooser<Command> autonSelector = new SendableChooser<>();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -50,7 +52,8 @@ public class RobotContainer {
       () -> -driveJoystick.getRawAxis(Constants.SwerveDrivetrain.kDriveXAxis), 
       () -> -driveJoystick.getRawAxis(Constants.SwerveDrivetrain.kDriveYAxis), 
       () -> -driveJoystick.getRawAxis(Constants.SwerveDrivetrain.kDriveWAxis), 
-      () -> driveJoystick.getRawButton(Constants.SwerveDrivetrain.kDriveFieldOrientButtonIdx)));
+      () -> driveJoystick.getRawButton(Constants.SwerveDrivetrain.kDriveFieldOrientButtonIdx),
+      driveJoystick));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -64,8 +67,11 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // button to zero the heading
-    // new JoystickButton(driveJoystick, 2).whenPressed(() -> swerveDrivetrain.zeroHeading());
-    new JoystickButton(driveJoystick, 3).whenPressed(()->swerveDrivetrain.resetModules());
+    resetHeadingButton = new JoystickButton(driveJoystick, 2);
+    resetHeadingButton.whenPressed(() -> swerveDrivetrain.zeroHeading());
+    resetSwerveModulesButton = new JoystickButton(driveJoystick, 3);
+    resetSwerveModulesButton.whenPressed(()->swerveDrivetrain.resetModules());
+    
     // buttons to change the rotation point for evasive maneuvers 
     // new JoystickButton(driveJoystick, 5)
     //   .whenPressed(() -> swerveDrivetrain.setRotationPointIdx(1))
