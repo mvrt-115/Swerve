@@ -26,10 +26,10 @@ public final class Constants {
 
         // Important locations for swerve
         public static final Translation2d m_standardCenterLocation = new Translation2d(0,0);
-        public static final Translation2d m_frontLeftLocation = new Translation2d(chassisWidth/2.0, chassisHeight/2.0);
-        public static final Translation2d m_frontRightLocation = new Translation2d(chassisWidth/2.0, -chassisHeight/2.0);
-        public static final Translation2d m_backLeftLocation = new Translation2d(-chassisWidth/2.0, chassisHeight/2.0);
-        public static final Translation2d m_backRightLocation = new Translation2d(-chassisWidth/2.0, -chassisHeight/2.0);
+        public static final Translation2d m_frontLeftLocation = new Translation2d(-chassisWidth/2.0, chassisHeight/2.0);
+        public static final Translation2d m_frontRightLocation = new Translation2d(chassisWidth/2.0, chassisHeight/2.0);
+        public static final Translation2d m_backLeftLocation = new Translation2d(-chassisWidth/2.0, -chassisHeight/2.0);
+        public static final Translation2d m_backRightLocation = new Translation2d(chassisWidth/2.0, -chassisHeight/2.0);
         public static final Translation2d[] rotatePoints = {
             m_standardCenterLocation,
             m_frontLeftLocation, 
@@ -56,10 +56,10 @@ public final class Constants {
         public static final int m_backRightEncoderID = 11;
 
         // Abs Encoder Offsets
-        public static final double m_frontLeftEncoderOffset = Units.degreesToRadians(-47);
-        public static final double m_frontRightEncoderOffset = 0.0;
-        public static final double m_backLeftEncoderOffset = 0.0;
-        public static final double m_backRightEncoderOffset = Units.degreesToRadians(35);
+        public static final double m_frontLeftEncoderOffset = Units.degreesToRadians(313);// + Math.PI/2.0;
+        public static final double m_frontRightEncoderOffset = Units.degreesToRadians(6);// + Math.PI/2.0;
+        public static final double m_backLeftEncoderOffset = Units.degreesToRadians(357);// + Math.PI/2.0;
+        public static final double m_backRightEncoderOffset = Units.degreesToRadians(34);// + Math.PI/2.0;
 
         // Position PID
         public static final double m_x_control_P = 0.1;
@@ -81,7 +81,7 @@ public final class Constants {
         public static final double kWheelNonlinearity = 0.05;
         public static final double kMaxSpeedMPS = 15;
         public static final double kDriveMaxAcceleration = 3;
-        public static final double kTurnMaxAcceleration = 2*Math.PI;
+        public static final double kTurnMaxAcceleration = 1*Math.PI;
         public static final double kDriveMaxSpeedMPS = 5;
         public static final double kTurnMaxSpeedRPS = 4*Math.PI;
         public static final int kDriveJoystickPort = 0;
@@ -114,18 +114,22 @@ public final class Constants {
     public static class SwerveModule {
         public static final double gear_ratio_turn = 1.0/16.0/1.3;
         public static final double gear_ratio_drive = 6.75/1.0;
-        public static final double radius = 0.75; // meters
+        public static final double radius = 0.05; // meters
         public static final double kwheelCircumference = 2*Math.PI*radius; // meters
         
         // PID Constants
-        public static final double kP = 0.1; //3.2364;
+        public static final double kP = 0.2; //3.2364;
         public static final double kI = 0;
         public static final double kD = 0;
         public static final double kFF = 0;
                                                             
         public static final double kPTurn = 0.05;
-        public static final double kITurn = 0;
-        public static final double kDTurn = 0;
-        public static final double kFTurn = 0;
+        public static final double kITurn = 0.0;
+        public static final double kDTurn = 0.0;
+        public static final double kFTurn = 0.0;
+    }
+
+    public static class JoystickControls {
+        public static final boolean xBoxControl = false;
     }
 }

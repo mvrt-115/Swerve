@@ -47,8 +47,8 @@ public class SwerveJoystickCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double vX = xSpeedFunc.get();
-    double vY = ySpeedFunc.get();
+    double vX = Constants.JoystickControls.xBoxControl ? ySpeedFunc.get(): xSpeedFunc.get();
+    double vY = Constants.JoystickControls.xBoxControl ? xSpeedFunc.get(): ySpeedFunc.get();
     double vW = turnSpeedFunc.get();
     SmartDashboard.putNumber("vX raw", vX);
     SmartDashboard.putNumber("vY raw", vY);
@@ -65,14 +65,15 @@ public class SwerveJoystickCommand extends CommandBase {
     vW = wLimiter.calculate(vW) * Constants.SwerveDrivetrain.kTurnMaxSpeedRPS;
 
     // configure rotate point
-    int POV = joystick.getPOV();
-    switch(POV) {
-      case 0: drivetrain.setRotationPointIdx(1);
-      case 90: drivetrain.setRotationPointIdx(2);
-      case 180: drivetrain.setRotationPointIdx(3);
-      case 270: drivetrain.setRotationPointIdx(4);
-      default: drivetrain.setRotationPointIdx(0);
-    }
+    drivetrain.setRotationPointIdx(0);
+    // int POV = joystick.getPOV();
+    // switch(POV) {
+    //   case 0: drivetrain.setRotationPointIdx(1);
+    //   case 90: drivetrain.setRotationPointIdx(2);
+    //   case 180: drivetrain.setRotationPointIdx(3);
+    //   case 270: drivetrain.setRotationPointIdx(4);
+    //   default: drivetrain.setRotationPointIdx(0);
+    // }
 
     // get chassis speed
     ChassisSpeeds chassisSpeeds;
@@ -93,7 +94,7 @@ public class SwerveJoystickCommand extends CommandBase {
     // convert to module states and apply to each wheel
     SwerveModuleState[] moduleStates = drivetrain.getKinematics().toSwerveModuleStates(
       chassisSpeeds,
-      Constants.SwerveDrivetrain.rotatePoints[drivetrain.getRotationPointIdx()]);
+      Constants.SwerveDrivetrain.rotatePoints[0]); //drivetrain.getRotationPointIdx()
     drivetrain.setModuleStates(moduleStates);
     SmartDashboard.putNumber("vX", vX);
     SmartDashboard.putNumber("vY", vY);

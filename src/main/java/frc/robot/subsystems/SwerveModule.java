@@ -127,16 +127,17 @@ public class SwerveModule {
    */
   public void resetEncoders() {
     // driveMotor.setSelectedSensorPosition(0);
+    // turnMotor.set(ControlMode.Position, 0);
     turnMotor.setSelectedSensorPosition(
       MathUtils.radiansToTicks(getAbsoluteEncoderRad(),
         Constants.Talon.talonFXTicks,
         Constants.SwerveModule.gear_ratio_turn));
-    SmartDashboard.putBoolean("Pressed", true);
-    try {
-      Thread.sleep(500);
-    } catch (Exception e) {}
-    SmartDashboard.putBoolean("Pressed", false);
-    turnMotor.set(ControlMode.Position, 0);
+    // SmartDashboard.putBoolean("Pressed", true);
+    // try {
+    //   Thread.sleep(100);
+    // } catch (Exception e) {}
+    // turnMotor.set(ControlMode.Position, 0);
+    // SmartDashboard.putBoolean("Pressed", false);
   }
 
   /**
@@ -197,7 +198,7 @@ public class SwerveModule {
       stop();
       return;
     }
-    state = SwerveModuleState.optimize(state, getState().angle); // ex. move -45 degrees instead of 225 degrees if at 0 degrees
+    // state = SwerveModuleState.optimize(state, getState().angle); // ex. move -45 degrees instead of 225 degrees if at 0 degrees
     desiredState = state;
     setVelocity(state.speedMetersPerSecond);
     setAngle(state.angle.getRadians());
