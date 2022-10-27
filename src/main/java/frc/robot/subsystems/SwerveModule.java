@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import java.sql.Time;
 
+import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.Logger;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
@@ -114,7 +116,7 @@ public class SwerveModule {
    */
   public double getAbsoluteEncoderRad() {
     double angle = absEncoder.getAbsolutePosition();
-    angle = Units.degreesToRadians(angle);
+    angle = Math.toRadians(angle);
     // absEncoder.getVoltage() / RobotController.getVoltage5V();
     // angle *= 2.0 * Math.PI;
     angle -= absEncoderOffsetRad;
@@ -132,6 +134,8 @@ public class SwerveModule {
       MathUtils.radiansToTicks(getAbsoluteEncoderRad(),
         Constants.Talon.talonFXTicks,
         Constants.SwerveModule.gear_ratio_turn));
+    SmartDashboard.putNumber("TurnMotor " + absEncoder.getDeviceID(), MathUtils.ticksToDegrees(turnMotor.getSelectedSensorPosition(), Constants.Talon.talonFXTicks, Constants.SwerveModule.gear_ratio_turn));
+    // Logger.log(e, this.toString());
     // SmartDashboard.putBoolean("Pressed", true);
     // try {
     //   Thread.sleep(100);

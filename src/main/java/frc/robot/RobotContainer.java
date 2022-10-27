@@ -67,8 +67,8 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // button to zero the heading
-    resetHeadingButton = new JoystickButton(driveJoystick, 2);
-    resetHeadingButton.whenPressed(() -> swerveDrivetrain.zeroHeading());
+    // resetHeadingButton = new JoystickButton(driveJoystick, 2);
+    // resetHeadingButton.whenPressed(() -> swerveDrivetrain.zeroHeading());
     resetSwerveModulesButton = new JoystickButton(driveJoystick, 3);
     resetSwerveModulesButton.whenPressed(()->swerveDrivetrain.resetModules());
     
