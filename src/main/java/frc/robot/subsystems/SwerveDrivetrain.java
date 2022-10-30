@@ -44,6 +44,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   private SwerveModuleState[] desiredStates = new SwerveModuleState[4];
   private SwerveModule[] motors;
   private int rotationPoint = 0;
+  public boolean fieldOriented = false;
 
   // Auton Stuff
   private Pose2d pose;
@@ -90,12 +91,12 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     motors[0] = new SwerveModule(
       Constants.SwerveDrivetrain.m_frontLeftDriveID,
-      Constants.SwerveDrivetrain.m_frontLeftTurnID,
-      Constants.SwerveDrivetrain.m_frontLeftEncoderID,
+      Constants.SwerveDrivetrain.m_backRightTurnID,
+      Constants.SwerveDrivetrain.m_backRightEncoderID,
       false,
       false,
       false,
-      Constants.SwerveDrivetrain.m_frontLeftEncoderOffset);
+      Constants.SwerveDrivetrain.m_backRightEncoderOffset);
 
     motors[1] = new SwerveModule(
       Constants.SwerveDrivetrain.m_frontRightDriveID,
@@ -117,12 +118,12 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     motors[3] = new SwerveModule(
       Constants.SwerveDrivetrain.m_backRightDriveID,
-      Constants.SwerveDrivetrain.m_backRightTurnID,
-      Constants.SwerveDrivetrain.m_backRightEncoderID,
+      Constants.SwerveDrivetrain.m_frontLeftTurnID,
+      Constants.SwerveDrivetrain.m_frontLeftEncoderID,
       false,
       false,
       false,
-      Constants.SwerveDrivetrain.m_backRightEncoderOffset);
+      Constants.SwerveDrivetrain.m_frontLeftEncoderOffset);
 
     pose = new Pose2d();
     odometry = new SwerveDriveOdometry(swerveKinematics, getRotation2d());

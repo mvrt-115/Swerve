@@ -58,7 +58,7 @@ public class MathUtils {
 
     public static int radiansToTicks(double radians, double encoder_ticks, double gear_ratio)
     {
-        return (int) ((encoder_ticks / gear_ratio) * radians/(2*Math.PI));
+        return (int) ((encoder_ticks / gear_ratio) * (radians/(2*Math.PI)));
     }
 
     public static double ticksToRadians(double ticks, double encoder_ticks, double gear_ratio)
