@@ -59,6 +59,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   // sensors
   // private AHRS gyro;
   private AHRS gyro;
+  private double gyroOffset = 0; // degrees
   
   // SIM
   private double time = 0;
@@ -91,12 +92,12 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     motors[0] = new SwerveModule(
       Constants.SwerveDrivetrain.m_frontLeftDriveID,
-      Constants.SwerveDrivetrain.m_backRightTurnID,
-      Constants.SwerveDrivetrain.m_backRightEncoderID,
+      Constants.SwerveDrivetrain.m_frontLeftTurnID,
+      Constants.SwerveDrivetrain.m_frontLeftEncoderID,
       false,
       false,
       false,
-      Constants.SwerveDrivetrain.m_backRightEncoderOffset);
+      Constants.SwerveDrivetrain.m_frontLeftEncoderOffset);
 
     motors[1] = new SwerveModule(
       Constants.SwerveDrivetrain.m_frontRightDriveID,
@@ -118,12 +119,12 @@ public class SwerveDrivetrain extends SubsystemBase {
 
     motors[3] = new SwerveModule(
       Constants.SwerveDrivetrain.m_backRightDriveID,
-      Constants.SwerveDrivetrain.m_frontLeftTurnID,
-      Constants.SwerveDrivetrain.m_frontLeftEncoderID,
+      Constants.SwerveDrivetrain.m_backRightTurnID,
+      Constants.SwerveDrivetrain.m_backRightEncoderID,
       false,
       false,
       false,
-      Constants.SwerveDrivetrain.m_frontLeftEncoderOffset);
+      Constants.SwerveDrivetrain.m_backRightEncoderOffset);
 
     pose = new Pose2d();
     odometry = new SwerveDriveOdometry(swerveKinematics, getRotation2d());
@@ -165,7 +166,7 @@ public class SwerveDrivetrain extends SubsystemBase {
    * @return heading angle in degrees
    */
   public double getHeading() {
-    return Math.IEEEremainder(gyro.getYaw(), 360);
+    return Math.IEEEremainder(gyro.getYaw() - gyroOffset, 360);
     //.getAngle()
     /**
      * use IEEEremainder because it uses formula:
@@ -228,7 +229,7 @@ public class SwerveDrivetrain extends SubsystemBase {
    */
   public void stopModules() {
     for (SwerveModule m : motors) {
-      m.stop();
+      m.disableModule();
     }
   }
 
@@ -427,8 +428,16 @@ public class SwerveDrivetrain extends SubsystemBase {
   }
 
   public void resetModules() {
+    // 10 times just because talons are weird 
+    // and setSelectedSensorPosition does not always 
+    // correctly work but repeating it many times 
+    // ensures that the talon is set correctly 
     for (SwerveModule m:motors) {
       m.resetEncoders();
     }
+
+    // for (SwerveModule m:motors) {
+    //   m.zeroPosition();
+    // }
   }
 }

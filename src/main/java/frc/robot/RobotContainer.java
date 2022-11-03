@@ -42,6 +42,7 @@ public class RobotContainer {
   private final Joystick driveJoystick = new Joystick(Constants.SwerveDrivetrain.kDriveJoystickPort);
   private JoystickButton resetHeadingButton;
   private JoystickButton resetSwerveModulesButton;
+  private JoystickButton zeroGyroButton;
 
   private final SendableChooser<Command> autonSelector = new SendableChooser<>();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -71,6 +72,10 @@ public class RobotContainer {
     // resetHeadingButton.whenPressed(() -> swerveDrivetrain.zeroHeading());
     resetSwerveModulesButton = new JoystickButton(driveJoystick, 3);
     resetSwerveModulesButton.whenPressed(()->swerveDrivetrain.resetModules());
+
+    zeroGyroButton = new JoystickButton(driveJoystick, 2);
+    zeroGyroButton.whenPressed(() -> swerveDrivetrain.zeroHeading());
+
     
     // buttons to change the rotation point for evasive maneuvers 
     // new JoystickButton(driveJoystick, 5)

@@ -41,7 +41,8 @@ public class SwerveModule {
   private SwerveModuleState desiredState;
 
   /** Creates a new SwerveModule. */
-  public SwerveModule(int driveID, int turnID, int encoderID, boolean driveReversed, boolean turnReversed, boolean encoderReversed, double encoderOffset) {
+  public SwerveModule(int driveID, int turnID, int encoderID, boolean driveReversed, boolean turnReversed,
+      boolean encoderReversed, double encoderOffset) {
     driveMotor = TalonFactory.createTalonFX(driveID, driveReversed);
     turnMotor = TalonFactory.createTalonFX(turnID, turnReversed);
 
@@ -63,56 +64,61 @@ public class SwerveModule {
 
     resetEncoders();
   }
-  
+
   /**
    * Get the drive position of the module
+   * 
    * @return the position in meters
    */
   public double getDrivePosition() {
     return MathUtils.ticksToMeter(
-      driveMotor.getSelectedSensorPosition(), 
-      Constants.Talon.talonFXTicks, 
-      Constants.SwerveModule.gear_ratio_drive, 
-      Constants.SwerveModule.radius);
+        driveMotor.getSelectedSensorPosition(),
+        Constants.Talon.talonFXTicks,
+        Constants.SwerveModule.gear_ratio_drive,
+        Constants.SwerveModule.radius);
   }
 
   /**
    * Get the turn position for the module
+   * 
    * @return the position in radians
    */
   public double getTurnPosition() {
     return MathUtils.ticksToRadians(
-      turnMotor.getSelectedSensorPosition(),
-      Constants.Talon.talonFXTicks,
-      Constants.SwerveModule.gear_ratio_turn);
+        turnMotor.getSelectedSensorPosition(),
+        Constants.Talon.talonFXTicks,
+        Constants.SwerveModule.gear_ratio_turn);
   }
 
   /**
    * Get the linear velocity of the module
+   * 
    * @return the linear velocity in mps
    */
   public double getDriveVelocity() {
     return MathUtils.rpmToMPS(
-      MathUtils.ticksToRPM(
-        driveMotor.getSelectedSensorVelocity(),
-        Constants.Talon.talonFXTicks,
-        Constants.SwerveModule.gear_ratio_drive),
-      Constants.SwerveModule.radius);
+        MathUtils.ticksToRPM(
+            driveMotor.getSelectedSensorVelocity(),
+            Constants.Talon.talonFXTicks,
+            Constants.SwerveModule.gear_ratio_drive),
+        Constants.SwerveModule.radius);
   }
 
   /**
    * Get the angular velocity of the module
+   * 
    * @return the angular velocity in rpm
    */
   public double getTurnVelocity() {
     return MathUtils.ticksToRPM(
-      turnMotor.getSelectedSensorVelocity(),
-      Constants.Talon.talonFXTicks,
-      Constants.SwerveModule.gear_ratio_drive);
+        turnMotor.getSelectedSensorVelocity(),
+        Constants.Talon.talonFXTicks,
+        Constants.SwerveModule.gear_ratio_drive);
   }
 
   /**
    * Get the angle of the absolute encoder sensor on the module
+   * 
    * @return the absolute encoder angle in radians
    */
   public double getAbsoluteEncoderRad() {
@@ -121,7 +127,7 @@ public class SwerveModule {
     // absEncoder.getVoltage() / RobotController.getVoltage5V();
     // angle *= 2.0 * Math.PI;
     angle -= absEncoderOffsetRad;
-    return angle * (absEncoderReversed? -1.0 : 1.0);
+    return angle * (absEncoderReversed ? -1.0 : 1.0);
   }
 
   /**
@@ -133,63 +139,68 @@ public class SwerveModule {
     // turnMotor.set(ControlMode.Position, 0);
     // turnMotor.set(ControlMode.Velocity, 0);
     // turnMotor.setSelectedSensorPosition(
-    //   MathUtils.radiansToTicks(getAbsoluteEncoderRad(),
-    //     Constants.Talon.talonFXTicks,
-    //     Constants.SwerveModule.gear_ratio_turn));
+    // MathUtils.radiansToTicks(getAbsoluteEncoderRad(),
+    // Constants.Talon.talonFXTicks,
+    // Constants.SwerveModule.gear_ratio_turn));
     // Logger.log(e, this.toString());
     // SmartDashboard.putBoolean("Pressed", true);
     // try {
-    //   Thread.sleep(100);
+    // Thread.sleep(100);
     // } catch (Exception e) {}
     // turnMotor.set(ControlMode.Position, 0);
     // SmartDashboard.putBoolean("Pressed", false);
+
     turnMotor.setSelectedSensorPosition(0);
-    talonEncoderOffset = turnMotor.getSelectedSensorPosition() - MathUtils.radiansToTicks(getAbsoluteEncoderRad(), Constants.Talon.talonFXTicks, Constants.SwerveModule.gear_ratio_turn);
+    talonEncoderOffset = 0 - MathUtils.radiansToTicks(getAbsoluteEncoderRad(),
+        Constants.Talon.talonFXTicks, Constants.SwerveModule.gear_ratio_turn);
   }
 
   /**
    * set the angle of the turn motor
+   * 
    * @param radians
    */
-  public void setAngle(double radians)
-  {
+  public void setAngle(double radians) {
     turnMotor.set(
-      ControlMode.Position, 
-      MathUtils.radiansToTicks(
-        radians,
-        Constants.Talon.talonFXTicks,
-        Constants.SwerveModule.gear_ratio_turn) - talonEncoderOffset);
+        ControlMode.Position,
+        MathUtils.radiansToTicks(
+            radians,
+            Constants.Talon.talonFXTicks,
+            Constants.SwerveModule.gear_ratio_turn) - talonEncoderOffset);
 
     SmartDashboard.putNumber("Turn Value " + getName(), MathUtils.radiansToTicks(
-      radians,
-      Constants.Talon.talonFXTicks,
-      Constants.SwerveModule.gear_ratio_turn));
+        radians,
+        Constants.Talon.talonFXTicks,
+        Constants.SwerveModule.gear_ratio_turn));
   }
 
   /**
    * set the velocity of the drive motor
+   * 
    * @param v_mps
    */
-  public void setVelocity(double v_mps)
-  {
-      driveMotor.set(
-        ControlMode.Velocity, 
+  public void setVelocity(double v_mps) {
+    driveMotor.set(
+        ControlMode.Velocity,
         MathUtils.rpmToTicks(
-          MathUtils.mpsToRPM(v_mps, Constants.SwerveModule.radius),
-          Constants.SwerveModule.gear_ratio_drive));
+            MathUtils.mpsToRPM(v_mps, Constants.SwerveModule.radius),
+            Constants.SwerveModule.gear_ratio_drive));
   }
 
   /**
    * get the swerve module state (with velocity and rotation)
+   * 
    * @return SwerveModuleState
    */
   public SwerveModuleState getState() {
-    SmartDashboard.putNumber("TurnMotor " + absEncoder.getDeviceID(), MathUtils.ticksToDegrees(turnMotor.getSelectedSensorPosition(), Constants.Talon.talonFXTicks, Constants.SwerveModule.gear_ratio_turn));
+    SmartDashboard.putNumber("TurnMotor " + absEncoder.getDeviceID(), MathUtils.ticksToDegrees(
+        turnMotor.getSelectedSensorPosition(), Constants.Talon.talonFXTicks, Constants.SwerveModule.gear_ratio_turn));
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurnPosition()));
   }
 
   /**
    * get the desired state of the module
+   * 
    * @return SwerveModuleState
    */
   public SwerveModuleState getDesiredState() {
@@ -198,15 +209,16 @@ public class SwerveModule {
 
   /**
    * set the desired state of the module
+   * 
    * @param state
    */
   public void setDesiredState(SwerveModuleState state) {
-    if (Math.abs(state.speedMetersPerSecond) < 0.001)
-    {
-      stop();
+    if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+      disableModule();
       return;
     }
-    // state = SwerveModuleState.optimize(state, getState().angle); // ex. move -45 degrees instead of 225 degrees if at 0 degrees
+    // state = SwerveModuleState.optimize(state, getState().angle); // ex. move -45
+    // degrees instead of 225 degrees if at 0 degrees
     desiredState = state;
     setVelocity(state.speedMetersPerSecond);
     setAngle(state.angle.getRadians());
@@ -216,26 +228,32 @@ public class SwerveModule {
   /**
    * stop the module from running
    */
-  public void stop() {
-    driveMotor.set(ControlMode.PercentOutput, 0);
+  public void disableModule() {
+    // driveMotor.set(ControlMode.Velocity, 0);
     // turnMotor.set(ControlMode.Position, 0);
+    // turnMotor.set(ControlMode.Velocity, 0);
+    driveMotor.set(ControlMode.PercentOutput, 0);
     turnMotor.set(ControlMode.PercentOutput, 0);
     // desiredState = new SwerveModuleState(0, new Rotation2d(0.0));
   }
 
   /**
    * get the swerve module name (useful for SmartDashboard)
+   * 
    * @return String name
    */
   public String getName() {
     SmartDashboard.putNumber("Cancoder " + absEncoder.getDeviceID(), absEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("Actual " + absEncoder.getDeviceID(), getAbsoluteEncoderRad());
-    SmartDashboard.putNumber("Val in Rad " + absEncoder.getDeviceID(), MathUtils.radiansToTicks(getAbsoluteEncoderRad(), Constants.Talon.talonFXTicks, Constants.SwerveModule.gear_ratio_turn)/(2048 / Constants.SwerveModule.gear_ratio_turn));
+    SmartDashboard.putNumber("Val in Rad " + absEncoder.getDeviceID(),
+        MathUtils.radiansToTicks(getAbsoluteEncoderRad(), Constants.Talon.talonFXTicks,
+            Constants.SwerveModule.gear_ratio_turn) / (2048 / Constants.SwerveModule.gear_ratio_turn));
     return "Swerve " + absEncoder.getDeviceID();
   }
 
   /**
    * get a summary of the modules values
+   * 
    * @return
    */
   public String getStateSummary() {
@@ -244,5 +262,12 @@ public class SwerveModule {
     str.append(getState().toString());
     str.append("; Cancoder Position: " + absEncoder.getAbsolutePosition() + "");
     return str.toString();
+  }
+
+  /**
+   * After reset, zero the wheels
+   */
+  public void zeroPosition() {
+    setAngle(0);
   }
 }
