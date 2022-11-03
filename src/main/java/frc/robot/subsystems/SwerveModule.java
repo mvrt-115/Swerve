@@ -218,6 +218,7 @@ public class SwerveModule {
       return;
     }
     // state = SwerveModuleState.optimize(state, getState().angle); // ex. move -45
+    // TODO custom optimize function, joystick inversions class, gyro reset
     // degrees instead of 225 degrees if at 0 degrees
     desiredState = state;
     setVelocity(state.speedMetersPerSecond);
