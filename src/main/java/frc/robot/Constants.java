@@ -80,7 +80,7 @@ public final class Constants {
         public static final double kThrottleDeadband = 0.2;
         public static final double kWheelGain = 0.05;
         public static final double kWheelNonlinearity = 0.05;
-        public static final double kMaxSpeedMPS = 5;
+        public static final double kMaxSpeedMPS = 5; // optimize max speed to prioritize translation
         public static final double kDriveMaxAcceleration = 3;
         public static final double kTurnMaxAcceleration = 1*Math.PI;
         public static final double kDriveMaxSpeedMPS = 2;

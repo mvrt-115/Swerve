@@ -130,6 +130,15 @@ public class SwerveModule {
     return angle * (absEncoderReversed ? -1.0 : 1.0);
   }
 
+  public double getRawEncoderRad() {
+    double angle = turnMotor.getSelectedSensorPosition();
+    angle += talonEncoderOffset;
+    return MathUtils.ticksToRadians(
+      angle,
+      Constants.Talon.talonFXTicks,
+      Constants.SwerveModule.gear_ratio_turn);
+  }
+
   /**
    * reset the encoders of the module
    * calibrate turn motor using abs encoder value
@@ -218,12 +227,43 @@ public class SwerveModule {
       return;
     }
     // state = SwerveModuleState.optimize(state, getState().angle); // ex. move -45
+    state = optimize(state);
     // TODO custom optimize function, joystick inversions class, gyro reset
     // degrees instead of 225 degrees if at 0 degrees
-    desiredState = state;
-    setVelocity(state.speedMetersPerSecond);
-    setAngle(state.angle.getRadians());
+    // desiredState = state;
+    // setVelocity(state.speedMetersPerSecond);
+    // setAngle(state.angle.getRadians());
     SmartDashboard.putString("Swerve [" + absEncoder.getDeviceID() + "] desired state", state.toString());
+  }
+
+  public SwerveModuleState optimize(SwerveModuleState state) {
+    double targetAngle = state.angle.getDegrees();
+    targetAngle %= 360.0;
+    double currentAngle = getRawEncoderRad() * 180.0 / Math.PI;
+    double currentAngleNormalized = currentAngle % 360.0;
+    double diff = targetAngle - currentAngleNormalized;
+    double velocity = state.speedMetersPerSecond;
+
+    if (90.0 < Math.abs(diff) && Math.abs(diff) < 270.0) {
+      double beta = 180.0 - diff;
+      targetAngle = currentAngle - beta;
+      velocity *= -1;
+    }
+    else if (Math.abs(diff) >= 270.0) {
+      if (diff < 0)
+        targetAngle = currentAngle + (360.0 + diff);
+      else
+        targetAngle = currentAngle - (360.0 - diff);
+    }
+    else {
+      targetAngle = currentAngle + diff;
+    }
+    
+    SmartDashboard.putNumber("Target Angle " + absEncoder.getDeviceID(), targetAngle);
+    setAngle(targetAngle* Math.PI / 180.0);
+    setVelocity(velocity);
+    SwerveModuleState newState = new SwerveModuleState(velocity, new Rotation2d(targetAngle));
+    return newState;
   }
 
   /**
