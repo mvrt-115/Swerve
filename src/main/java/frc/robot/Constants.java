@@ -57,9 +57,9 @@ public final class Constants {
         public static final int m_backRightEncoderID = 11;
 
         // Abs Encoder Offsets
-        public static final double m_frontLeftEncoderOffset = Units.degreesToRadians(316);// + Math.PI/2.0;
-        public static final double m_frontRightEncoderOffset = Units.degreesToRadians(4);// + Math.PI/2.0;
-        public static final double m_backLeftEncoderOffset = Units.degreesToRadians(357);// + Math.PI/2.0;
+        public static final double m_frontLeftEncoderOffset = Units.degreesToRadians(314.7);// + Math.PI/2.0;
+        public static final double m_frontRightEncoderOffset = Units.degreesToRadians(4.3);// + Math.PI/2.0;
+        public static final double m_backLeftEncoderOffset = Units.degreesToRadians(3);// + Math.PI/2.0;
         public static final double m_backRightEncoderOffset = Units.degreesToRadians(33);// + Math.PI/2.0;
 
         // Position PID
@@ -83,8 +83,8 @@ public final class Constants {
         public static final double kMaxSpeedMPS = 5; // optimize max speed to prioritize translation
         public static final double kDriveMaxAcceleration = 3;
         public static final double kTurnMaxAcceleration = 1*Math.PI;
-        public static final double kDriveMaxSpeedMPS = 2;
-        public static final double kTurnMaxSpeedRPS = 1*Math.PI;
+        public static final double kDriveMaxSpeedMPS = 3;
+        public static final double kTurnMaxSpeedRPS = 1 *Math.PI;
         public static final int kDriveJoystickPort = 0;
         public static final int kDriveXAxis = 0;
         public static final int kDriveYAxis = 1;
