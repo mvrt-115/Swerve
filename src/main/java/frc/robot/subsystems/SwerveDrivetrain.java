@@ -59,8 +59,8 @@ public class SwerveDrivetrain extends SubsystemBase {
   private TrajectoryConfig trajectoryConfig;
 
   // sensors
-  // private AHRS gyro;
   private AHRS gyro;
+  // private PigeonIMU gyro;
   private double gyroOffset = 0; // degrees
   
   // SIM
@@ -69,6 +69,7 @@ public class SwerveDrivetrain extends SubsystemBase {
   
   /** Creates a new SwerveDrive. */
   public SwerveDrivetrain() {
+    // gyro = new PigeonIMU(Constants.SwerveDrivetrain.pigeon_id);
     gyro = new AHRS(SPI.Port.kMXP);
 
     // reset in new thread since gyro needs some time to boot up and we don't 
